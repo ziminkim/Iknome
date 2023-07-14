@@ -13,7 +13,7 @@ struct AutosuggestionApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RecordView()
+            RecordView2()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
