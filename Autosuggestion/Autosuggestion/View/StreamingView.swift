@@ -6,15 +6,41 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct StreamingView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
+    var auto: FetchedResults<Item>.Element
+    @Environment(\.dismiss) var dismiss //go back
+    
+    @State var movetoedit = false
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        //오토레이아웃 배우고 다시 올게
+        VStack { 
+            Text(auto.name!)
+                .frame(alignment: .leading)
+                .background(Color.red)
+                .font(.title)
+            ScrollView {
+                Text(auto.memo!)
+                    .frame(alignment: .leading)
+                    .background(Color.orange)
+                    .padding()
+                    
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    movetoedit.toggle()
+                } label: {
+                    Image(systemName: "pencil.circle")
+                }
+
+            }
+        }
     }
 }
 
-struct StreamingView_Previews: PreviewProvider {
-    static var previews: some View {
-        StreamingView()
-    }
-}
+

@@ -9,12 +9,14 @@ import SwiftUI
 
 @main
 struct AutosuggestionApp: App {
-    let persistenceController = PersistenceController.shared
+    
+    @StateObject private var dataController = DataController()
 
     var body: some Scene {
         WindowGroup {
-            RecordView2()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            MainListView()
+                .environment(\.managedObjectContext, dataController.container.viewContext)
+                .preferredColorScheme(.dark)
         }
     }
 }
