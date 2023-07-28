@@ -44,5 +44,13 @@ class DataController : ObservableObject {
         save(context: context)
     }
     
+    func editMemento(memento: Item, name: String, memo: String, context: NSManagedObjectContext){
+        memento.name = name
+        memento.memo = memo
+        memento.date = Date()
+        
+        save(context: context)
+    }
+    
 
 }

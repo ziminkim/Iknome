@@ -19,6 +19,10 @@
 		9AF204162A613ADE00B01C72 /* MainListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF204152A613ADE00B01C72 /* MainListView.swift */; };
 		9AF204182A613E2F00B01C72 /* CreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF204172A613E2F00B01C72 /* CreateView.swift */; };
 		9AF204432A6524ED00B01C72 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF204422A6524ED00B01C72 /* DataController.swift */; };
+		9AF2047F2A724A2500B01C72 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF2047E2A724A2500B01C72 /* EditView.swift */; };
+		9AF2049C2A72650100B01C72 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF2049B2A72650100B01C72 /* AlarmView.swift */; };
+		9AF204A62A739C2300B01C72 /* UserNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF204A52A739C2300B01C72 /* UserNotification.swift */; };
+		9AF204A82A73B9F700B01C72 /* RepeatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF204A72A73B9F700B01C72 /* RepeatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +60,10 @@
 		9AF204152A613ADE00B01C72 /* MainListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListView.swift; sourceTree = "<group>"; };
 		9AF204172A613E2F00B01C72 /* CreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateView.swift; sourceTree = "<group>"; };
 		9AF204422A6524ED00B01C72 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		9AF2047E2A724A2500B01C72 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		9AF2049B2A72650100B01C72 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
+		9AF204A52A739C2300B01C72 /* UserNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotification.swift; sourceTree = "<group>"; };
+		9AF204A72A73B9F700B01C72 /* RepeatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +165,10 @@
 				9A822C542A5D769400F76DD1 /* StreamingView.swift */,
 				9AB03B712A60003900B194C8 /* RecordView.swift */,
 				9AF204172A613E2F00B01C72 /* CreateView.swift */,
+				9AF2047E2A724A2500B01C72 /* EditView.swift */,
+				9AF2049B2A72650100B01C72 /* AlarmView.swift */,
+				9AF204A52A739C2300B01C72 /* UserNotification.swift */,
+				9AF204A72A73B9F700B01C72 /* RepeatView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -302,10 +314,14 @@
 			files = (
 				9A822C202A5D48D000F76DD1 /* AutosuggestionApp.swift in Sources */,
 				9A822C552A5D769400F76DD1 /* StreamingView.swift in Sources */,
+				9AF2047F2A724A2500B01C72 /* EditView.swift in Sources */,
+				9AF204A82A73B9F700B01C72 /* RepeatView.swift in Sources */,
 				9AF204182A613E2F00B01C72 /* CreateView.swift in Sources */,
 				9AB03B722A60003900B194C8 /* RecordView.swift in Sources */,
 				9AF204432A6524ED00B01C72 /* DataController.swift in Sources */,
 				9AF204162A613ADE00B01C72 /* MainListView.swift in Sources */,
+				9AF204A62A739C2300B01C72 /* UserNotification.swift in Sources */,
+				9AF2049C2A72650100B01C72 /* AlarmView.swift in Sources */,
 				9A822C252A5D48D000F76DD1 /* Autosuggestion.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

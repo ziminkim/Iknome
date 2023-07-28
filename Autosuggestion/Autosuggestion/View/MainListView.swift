@@ -10,7 +10,7 @@ import SwiftUI
 struct MainListView: View {
     
     @Environment(\.managedObjectContext) var managedObjectContext
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) var auto : FetchedResults<Item>
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) var memento : FetchedResults<Item>
     
     @State var movetocreate : Bool = false
     
@@ -23,12 +23,12 @@ struct MainListView: View {
                 List {
                     //여기 메모 & 녹음 파일을 가진 폴더 리스트를 넣을거야
                     //객체 간에 관계가 있게 저장? sqlite나 coredata 사용해서 만들기
-                    ForEach (auto) { auto in
-                        NavigationLink(destination: StreamingView(auto: auto)) { //
+                    ForEach (memento) { memento in
+                        NavigationLink(destination: StreamingView(memento: memento)) { //
                             
                             VStack(alignment: .leading) {
                                 //제목
-                                Text(auto.name!)
+                                Text(memento.name!)
                                 //시간
                                 HStack {
                                     Text("알람 주기랑 녹음길이")
@@ -64,7 +64,7 @@ struct MainListView: View {
     
     func deleteMemento(offset: IndexSet) {
         withAnimation {
-            offset.map { auto[$0] }.forEach(managedObjectContext.delete)
+            offset.map { memento[$0] }.forEach(managedObjectContext.delete)
             
             DataController().save(context: managedObjectContext)
         }
