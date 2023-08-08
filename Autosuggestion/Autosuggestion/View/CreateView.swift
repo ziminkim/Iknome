@@ -21,31 +21,38 @@ struct CreateView: View {
         
         NavigationView {
             
-            Form {
+            VStack {
                 TextField("제목", text: $name)
                     .padding(6)
                     .font(.title)
                 //여러 줄 입력 위해
+                Rectangle().frame(height: 0.5).foregroundColor(.gray)
                 TextEditor(text: $memo)
                     .frame(height: 600) // 일단,, 이렇게 하고 테스트
                     .padding(6)
                     .font(.body)
                 
+                Spacer()
+                
             }
             .padding()
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
+                    Button("저장") {
                         DataController().addMemento(name: name, memo: memo, context: managedObjectContext)
                         dismiss()
-                    } label: {
-                        Text("저장")
+                    }
+
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("취소") {
+                        dismiss()
                     }
 
                 }
             }
 
-        }
+        }.padding()
         
     }
 }

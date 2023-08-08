@@ -17,7 +17,19 @@ struct AlarmView: View {
     @Environment(\.dismiss) var dismiss //go back
     @State var selectedDate: Date = Date()
     @State var alert = false
-    @State var selectRepeat = false
+    static let instance = NotificationManager() //singleton
+    
+    enum Day: Int, CaseIterable {
+        case 일
+        case 월
+        case 화
+        case 수
+        case 목
+        case 금
+        case 토
+    }
+    @State private var selectedDays: [Day] = []
+    
     
     var body: some View {
         
@@ -25,37 +37,59 @@ struct AlarmView: View {
             
             VStack(spacing: 20){
                 
-                //Rectangle().frame(height:0)
                 //select time
                 DatePicker("",selection: $selectedDate, displayedComponents: .hourAndMinute)
                     .datePickerStyle(WheelDatePickerStyle())
                     .labelsHidden() //라벨 없애서 중앙정렬
+
                 
                 //repeat
-                HStack {
-                    Spacer()
-                    Button("반복"){
-                        selectRepeat.toggle()
+                HStack(spacing: 40) {
+                    Text("반복")
+                        .foregroundColor(.blue)
+                    
+                    HStack {
+                        ForEach(Day.allCases, id: \.self) { day in
+                            Text(String(day.rawValue)) //한글로 표시하고파,,
+                                .bold()
+                                .foregroundColor(.white)
+                                .frame(width: 30, height: 30)
+                                .background(selectedDays.contains(day)
+                                            ? Color(uiColor: .lightGray)
+                                                .opacity(80).cornerRadius(10)
+                                            : Color(uiColor: .secondarySystemGroupedBackground).cornerRadius(10))
+                                .onTapGesture {
+                                                if selectedDays.contains(day) {
+                                                    selectedDays.removeAll(where: {$0 == day})
+                                                } else {
+                                                    selectedDays.append(day)
+                                                }
+                                            }
+                            
+                        }
                     }
-                    Spacer()
+                    //RepeatView()
+                    //selectRepeat.toggle()
                 }
-                .frame(height: 20)
+                .frame(width:350 , height: 16)
                 .padding()
-                .background(Color.secondary)
-                .cornerRadius(20)
                 
-                //----------------------------
-                //반복 버튼 누르면 창나오게
-                //알람 삭제 버튼 누르면 notification delete
-                //여기 버튼 만들다가 디자인 너무 이상해서 스톱
-                //예시 자료를 좀 많이 만들어 봐야할듯
+
                 
                 //알람 삭제
                 Button("알람 삭제"){
-                    
+                    //알람 삭제 버튼 누르면 notification delete
+                    //경고창 하나 띄우기 알람을 삭제하시겠습니까?
+                    //이거 맞나
+                    cancelNotification(name: memento.name!)
+                    //memento에 alarm -> " "
+                    DataController().addAlarm(memento: memento, name: memento.name!, alarm: "반복 없음", context: managedObjectContext)
                 }
-                .background(Color.secondary)
-                .cornerRadius(20)
+                .frame(width:350 , height: 16)
+                .padding()
+                .background(Color(uiColor: .secondarySystemGroupedBackground))
+                .cornerRadius(10)
+                
                 
                 Spacer() //이거하니까 위로 올라감
                 
@@ -63,26 +97,42 @@ struct AlarmView: View {
             .padding()
             .navigationBarTitle("알람 편집")
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $selectRepeat){
-                RepeatView()
-            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
+                    Button("취소") {
                         dismiss()
-                    } label: {
-                        Text("취소")
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        //save time, hour, repeat
+                    Button("완료") {
+                        //선택한 시간 받아오기
+                        let formath = DateFormatter()
+                        formath.dateFormat = "HH"
+                        let formatm = DateFormatter()
+                        formatm.dateFormat = "mm"
+                        var hh = formath.string(from: selectedDate)
+                        var mm = formatm.string(from: selectedDate)
+                        //기존에 있는거 지우고
+                        cancelNotification(name: memento.name!)
+                        //알랆 세팅
+                        for day in selectedDays {
+                            scheduleNotification(
+                                hour: hh,
+                                minute: mm,
+                                name: memento.name!,
+                                selectedDay: day)
+                        }
                         
+                        //메멘토에 저장
+                        //매주 월요일, 화요일 00:00시 반복
+                        //enum type array 출력하는 법 -> 위에도 적용
+                        if selectedDays.count != 0 {
+                            var alarm = "매주 \(selectedDays) \(hh):\(mm)"
+                            DataController().addAlarm(memento: memento, name: memento.name!, alarm: alarm, context: managedObjectContext)
+                        }
                         
                         dismiss()
-                    } label: {
-                        Text("완료")
                     }
 
                 }
@@ -93,16 +143,60 @@ struct AlarmView: View {
             )
         })
         .onAppear {//뷰가 열릴 때 실행
-            let options: UNAuthorizationOptions = [.alert, .sound, .badge]
-            UNUserNotificationCenter.current().requestAuthorization(options: options) { //권한을 받아오는 함수 실행
-                (success, error) in
-                if !success {
-                    alert.toggle()
-                } else {
-                    //권한있으면 뭘가져오냐?
-                }
+            requestAuthorization()
+        }
+    }
+    
+    func requestAuthorization()  {
+        let options: UNAuthorizationOptions = [.alert, .sound, .badge]
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { //권한을 받아오는 함수 실행
+            (success, error) in
+            if !success {
+                alert.toggle()
+                
+            } else {
                 
             }
+            
         }
+        
+    }
+    
+    func scheduleNotification(hour: String, minute: String, name: String, selectedDay: Day) {
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Memento"
+        content.subtitle = "'\(name)'를 기억할 시간입니다."
+        content.sound = .default
+        content.badge = 1 //앱 아이콘 위옆에 1 뜨는거
+        
+        //trigger = time, calendar, location
+        //time
+        //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5.0, repeats: false)
+        
+        //calendar
+        var dateComponents = DateComponents()
+        dateComponents.hour = Int(hour)
+        dateComponents.minute = Int(minute)
+        dateComponents.weekday = selectedDay.rawValue
+        
+        
+        //dateComponents.weekday = selectedDays 다중선택이 안되네
+        //weekday, weekofmonth, 등 다양하게 가능
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        
+        //location
+        //let trigger = UNLocationNotificationTrigger(region: , repeats: )
+        
+       //identifier를 memento.name으로?
+        let request = UNNotificationRequest(identifier: UUID().uuidString,
+                                            content: content,
+                                            trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
+    }
+    
+    func cancelNotification(name: String) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [UUID().uuidString])
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [UUID().uuidString])
     }
 }

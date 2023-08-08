@@ -27,7 +27,7 @@ class NotificationManager {
         
     }
     
-    func scheduleNotification() {
+    func scheduleNotification(hour: Int, minute: Int) {
         
         let content = UNMutableNotificationContent()
         content.title = "This is my first notification"
@@ -41,9 +41,9 @@ class NotificationManager {
         
         //calendar
         var dateComponents = DateComponents()
-        dateComponents.hour = 14
-        dateComponents.minute = 19
-        //weekday, weeofmonth, 등 다양하게 가능
+        dateComponents.hour = hour
+        dateComponents.minute = minute
+        //weekday, weekofmonth, 등 다양하게 가능
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         
         //location
@@ -71,7 +71,7 @@ struct LocalNotification: View {
             }
             
             Button("Schedule Notification") {
-                NotificationManager.instance.scheduleNotification()
+                NotificationManager.instance.scheduleNotification(hour: 10, minute: 30)
             }
             
             Button("Cancel Notification") {

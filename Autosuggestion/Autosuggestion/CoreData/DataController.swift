@@ -40,6 +40,7 @@ class DataController : ObservableObject {
         memento.date = Date()
         if name != "" {memento.name = name} else {memento.name = "제목 없음"}
         if memo != "" {memento.memo = memo} else {memento.memo = "메모 없음"}
+        memento.alarm = "반복 없음"
         
         save(context: context)
     }
@@ -52,5 +53,10 @@ class DataController : ObservableObject {
         save(context: context)
     }
     
+    func addAlarm (memento: Item, name: String, alarm: String, context: NSManagedObjectContext){
+        memento.alarm = alarm
+        
+        save(context: context)
+    }
 
 }

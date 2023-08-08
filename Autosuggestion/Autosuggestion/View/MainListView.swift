@@ -31,7 +31,7 @@ struct MainListView: View {
                                 Text(memento.name!)
                                 //시간
                                 HStack {
-                                    Text("알람 주기랑 녹음길이")
+                                    Text(memento.alarm!)
                                 }
                             }
                             
