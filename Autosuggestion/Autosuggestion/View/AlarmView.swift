@@ -27,6 +27,18 @@ struct AlarmView: View {
         case 목
         case 금
         case 토
+        
+        var description : String {
+            switch self {
+            case .일 : return "일"
+            case .월 : return "월"
+            case .화 : return "화"
+            case .수 : return "수"
+            case .목 : return "목"
+            case .금 : return "금"
+            case .토 : return "토"
+            }
+        }
     }
     @State private var selectedDays: [Day] = []
     
@@ -50,7 +62,7 @@ struct AlarmView: View {
                     
                     HStack {
                         ForEach(Day.allCases, id: \.self) { day in
-                            Text(String(day.rawValue)) //한글로 표시하고파,,
+                            Text(day.description)
                                 .bold()
                                 .foregroundColor(.white)
                                 .frame(width: 30, height: 30)
@@ -127,8 +139,17 @@ struct AlarmView: View {
                         //메멘토에 저장
                         //매주 월요일, 화요일 00:00시 반복
                         //enum type array 출력하는 법 -> 위에도 적용
+                        //selectedDays는 배열
+                        //배열안에 항목만 출력
                         if selectedDays.count != 0 {
-                            var alarm = "매주 \(selectedDays) \(hh):\(mm)"
+                            
+                            var alarm = "반복, "
+                            
+                            for day in selectedDays {
+                                alarm = alarm + " " + String(day.description)
+                            }
+                            
+                            alarm = alarm + " \(hh):\(mm)"
                             DataController().addAlarm(memento: memento, name: memento.name!, alarm: alarm, context: managedObjectContext)
                         }
                         
